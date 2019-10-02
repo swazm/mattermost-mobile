@@ -19,5 +19,6 @@ jobs:
     - name: Install packages
       run: |
         yarn install
+        make dist/assets
     - name: Build APK
       run: cd android && ./gradlew assembleRelease
