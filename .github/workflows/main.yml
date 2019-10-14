@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: macOS-10.14
-    
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js 10.x
@@ -22,3 +20,20 @@ jobs:
         make dist/assets
     - name: Build APK
       run: cd android && ./gradlew assembleRelease
+  
+  build_ios: 
+    runs-on: macOS-10.14
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 10.x
+        with:
+          version: 10.x          
+      - name: Install packages
+        run: |
+          yarn install
+          make dist/assets
+      - name: Archive & Build IPA
+        run: |
+          cd ios
+          xcodebuild -workspace Mattermost.xcworkspace -scheme Release clean archive -configuration release -sdk iphoneos -archivePath SwazmCommunity.xcarchive
+          xcodebuild -exportArchive -archivePath  SwazmCommunity.xcarchive -exportPath  SwazmCommunity.ipa
