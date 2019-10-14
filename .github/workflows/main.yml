@@ -36,5 +36,5 @@ jobs:
       - name: Archive & Build IPA
         run: |
           cd ios
-          xcodebuild -workspace Mattermost.xcworkspace -scheme Release clean archive -configuration release -sdk iphoneos -archivePath SwazmCommunity.xcarchive
+          xcodebuild -workspace Mattermost.xcworkspace -scheme Mattermost clean archive -configuration release -sdk iphoneos -archivePath SwazmCommunity.xcarchive
           xcodebuild -exportArchive -archivePath  SwazmCommunity.xcarchive -exportPath  SwazmCommunity.ipa
