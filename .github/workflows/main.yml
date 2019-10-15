@@ -33,6 +33,10 @@ jobs:
         run: |
           yarn install
           make dist/assets
+      - name: Install & Configure fastlane
+        run: |
+          brew cask install fastlane
+          fastlane run setup_ci force:"true"
       - name: Archive & Build IPA
         run: |
           cd ios
