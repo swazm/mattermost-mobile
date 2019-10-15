@@ -1,0 +1,67 @@
+name: Build APK & IPA
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build_android:
+    runs-on: macOS-10.14
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Install packages
+      run: |
+        yarn install
+        make dist/assets
+    - name: Upgrade Ruby
+      run: |
+        curl -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
+        rvm install ruby-2.4.2
+        rvm use ruby-2.4.2 --default
+    - name: Install & Configure fastlane
+      run: |
+        sudo gem install fastlane -NV
+        fastlane run setup_ci force:"true"
+    - name: Build APK
+      env:
+        BABEL_ENV: production
+        NODE_ENV: production
+      run: |
+        cd fastlane
+        bundle install
+        fastlane android build
+  
+  build_ios: 
+    runs-on: macOS-10.14
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x          
+      - name: Install packages
+        run: |
+          yarn install
+          make dist/assets
+      - name: Upgrade Ruby
+        run: |
+          curl -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
+          rvm install ruby-2.4.2
+          rvm use ruby-2.4.2 --default
+      - name: Install & Configure fastlane
+        run: |
+          sudo gem install fastlane -NV
+          fastlane run setup_ci force:"true"
+      - name: Archive & Build IPA
+        env:
+          BABEL_ENV: production
+          NODE_ENV: production
+        run: |
+          cd fastlane
+          bundle install
+          fastlane ios build
