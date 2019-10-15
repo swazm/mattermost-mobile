@@ -21,6 +21,7 @@ jobs:
     - name: Upgrade Ruby
       run: |
         curl -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
+        source $HOME/.rvm/scripts/rvm
         rvm install ruby-2.4.2
         rvm use ruby-2.4.2 --default
     - name: Install & Configure fastlane
@@ -35,6 +36,10 @@ jobs:
         cd fastlane
         bundle install
         fastlane android build
+    - uses: actions/upload-artifact@master
+      with:
+        name: APK
+        path: ./Mattermost_Beta.apk
   
   build_ios: 
     runs-on: macOS-10.14
@@ -51,6 +56,7 @@ jobs:
       - name: Upgrade Ruby
         run: |
           curl -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
+          source $HOME/.rvm/scripts/rvm
           rvm install ruby-2.4.2
           rvm use ruby-2.4.2 --default
       - name: Install & Configure fastlane
